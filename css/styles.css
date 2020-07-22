@@ -10,6 +10,10 @@
     box-shadow: 3px 4px #1c4dec
 }
 
+.robot-card:hover{
+background-color: rgb(5, 155, 255)
+}
+
 .robot-image {
     justify-self: center;
     height: auto;
@@ -52,4 +56,16 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center
+}
+
+.fight-button{
+    background-color: rgb(228, 109, 13);
+}
+
+.fight-button:hover{
+    background-color: rgb(165, 78, 7);
+}
+
+.fight-button:active{
+    background-color: yellow
 }

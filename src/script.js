@@ -2,29 +2,107 @@ document.addEventListener('DOMContentLoaded', () =>{
     console.log('DOMContentLoaded')
 
     //Important definitions
-    const mainGrid = document.querySelector("div#robot-collection")
+
 
     //Actions
-    fetchAllRobots()
+    mainMenu()
 
 
     //Functions
     function ce(element) {
         return document.createElement(element)
     }
+
+    function mainMenu(){
+        document.body.innerHTML = ""
+
+        const myRobotsBtn = ce('button')
+        myRobotsBtn.innerText = 'My Robots'
+
+        myRobotsBtn.addEventListener('click', () => {
+            fetchMyRobots('display')
+        })
+
+        const allRobotsBtn = ce('button')
+        allRobotsBtn.innerText = 'All Robots'
+
+        allRobotsBtn.addEventListener('click', () => {
+            fetchAllRobots('display')
+        })
+
+        const playBtn = ce('button')
+        playBtn.innerText = 'Play!'
+
+        playBtn.addEventListener('click', () => {
+            fetchMyRobots('fight')
+        })
+
+        document.body.append(playBtn, myRobotsBtn, allRobotsBtn)
+    }
     
-    function fetchAllRobots() {
+    function fetchMyRobots(mode) {
+        document.body.innerHTML = ""
+
+        fetch('http://localhost:3000/users')
+        .then(res => res.json())
+        .then(users => users.filter(user => user.id == 1)) //change to current user's id
+        .then(user => user.map(user => user.robots))
+        .then(robots => showMyRobots(robots, mode))
+    }
+    
+    function fetchAllRobots(mode){
+        document.body.innerHTML = ""
+
         fetch('http://localhost:3000/robots')
         .then(res => res.json())
-        .then(robots => showRobots(robots))
+        .then(robots => showAllRobots(robots, mode))
+    }
+
+    function showMyRobots(robots, mode) {
+
+        const mainGrid = ce('div')
+        mainGrid.className = 'main-grid'
+        document.body.append(mainGrid)
+
+        if(mode == 'fight'){
+            const fightMessage = ce('h1')
+            fightMessage.innerText = 'Pick a Robot!'
+            document.body.prepend(fightMessage)
+        }
+
+
+        const homeBtn = ce('button')
+        homeBtn.innerText = 'Home'
+
+        homeBtn.addEventListener('click', () => {
+            mainMenu()
+        })
+        document.body.prepend(homeBtn)
+
+
+        robots = Object.values(robots[0])
+        robots.forEach(robot => showRobot(robot, mode, mainGrid))        
+    }
+
+    function showAllRobots(robots, mode){
+        const mainGrid = ce('div')
+        mainGrid.className = 'main-grid'
+        document.body.append(mainGrid)
+
+        const homeBtn = ce('button')
+        homeBtn.innerText = 'Home'
+
+        homeBtn.addEventListener('click', () => {
+            mainMenu()
+        })
+        document.body.prepend(homeBtn)
+
+
+        robots.forEach(robot => showRobot(robot, mode, mainGrid))
     }
     
-    function showRobots(robots) {
-        robots.forEach(robot => showRobot(robot))
-    }
-    
-    function showRobot(robot){
-        console.log(robot)
+    function showRobot(robot, mode, grid){
+
         const card = ce('div')
         card.className = "robot-card"
     
@@ -32,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         name.innerText = robot.name
     
         const author = ce('h4')
-        author.innerText = robot.author
+        author.innerText = `Created by: ${robot.author}`
     
         const head = ce('img')
         head.src = robot.parts[0].image_url
@@ -88,9 +166,20 @@ document.addEventListener('DOMContentLoaded', () =>{
         infoGrid.className = 'info-grid'
     
         infoGrid.append(statsDiv, movesDiv)
-    
+        
         card.append(name, author, head, torso, lowerBody, infoGrid)
+
+        if (mode == 'fight'){
+            battleBtn = ce('button')
+            battleBtn.innerText = 'Fight!'
+            battleBtn.className = 'fight-button'
+
+            battleBtn.addEventListener('click', () => {
+                console.log(`Fight button clicked with ${robot.name}`)
+            })
+            card.append(battleBtn)
+        }
     
-        mainGrid.append(card)
+        grid.append(card)
     }
 })
