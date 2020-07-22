@@ -1,10 +1,14 @@
 document.addEventListener('DOMContentLoaded', () =>{
     console.log('DOMContentLoaded')
 
+    //Important definitions
     const mainGrid = document.querySelector("div#robot-collection")
 
+    //Actions
     fetchAllRobots()
 
+
+    //Functions
     function ce(element) {
         return document.createElement(element)
     }
