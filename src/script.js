@@ -18,6 +18,10 @@ document.addEventListener('DOMContentLoaded', () =>{
         return array[Math.floor(Math.random() * array.length)]
     }
 
+    const sleep = (milliseconds) => {
+        return new Promise(resolve => setTimeout(resolve, milliseconds))
+    }
+
     function mainMenu(){
         document.body.innerHTML = ""
 
@@ -276,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         attacker.moves.forEach(move => {
             let attackBtn = ce('button')
             attackBtn.id = 'attack-button'
-            attackBtn.innerText = move.name
+            attackBtn.innerText = `${move.name}\nBattery Cost: ${move.cost}`
             attackBtn.className = `${move.category}-move-button`
 
             controlPanel.append(attackBtn)
@@ -291,50 +295,105 @@ document.addEventListener('DOMContentLoaded', () =>{
 
                 if(first == attacker){
                     performMove(attacker)
-                    printToScreen('\n')
-                    setTimeout(() => {performMove(opponent)}, 2000)
                     displayStats()
+                    if(!gameFinished(attacker, opponent)){
+                        sleep(2000).then(() => {
+                            printToScreen('\n')
+                            performMove(opponent)
+                            printToScreen('\n')
+                            displayStats()
+                            if(!gameFinished(attacker, opponent)){
+                                attackBtns.forEach(button => button.disabled = false)
+                            }
+                            else{
+                                gameOver(attacker, opponent)
+                            }
+                        })
+                    }
+                    else{
+                        gameOver(attacker, opponent)
+                    }
                 }
                 else if(first == opponent){
                     performMove(opponent)
-                    printToScreen('\n')
-                    setTimeout(() => {performMove(attacker)}, 2000)
                     displayStats()
+                    if(!gameFinished(attacker, opponent)){
+                        sleep(2000).then(() => {
+                            printToScreen('\n')
+                            performMove(attacker)
+                            printToScreen('\n')
+                            displayStats()
+                            if(!gameFinished(attacker, opponent)){
+                                attackBtns.forEach(button => button.disabled = false)
+                            }
+                            else{
+                                gameOver(attacker, opponent)
+                            }
+                        })
+                    }
+                    else{
+                        gameOver(attacker, opponent)
+                    }
+                }
+
+                function gameFinished(attacker, opponent){
+                    if(attacker.health <= 0 || attacker.battery_life <= 0 || opponent.health <= 0 || opponent.battery_life <= 0){
+                        return true
+                    }
+                    else{
+                        return false
+                    }
+                }
+
+                function gameOver(attacker, opponent){
+                    if(attacker.health <= 0){
+                        printToScreen('Game over, you ran out of health.')
+                    }
+                    else if(attacker.battery_life <=0){
+                        printToScreen('Game over, you ran out of battery life.')
+                    }
+                    else if(opponent.health <= 0){
+                        printToScreen('The opponent ran out of health, you win!')
+                    }
+                    else if(opponent.battery_life <= 0){
+                        printToScreen('The opponent ran out of battery life, you win!')
+                    }
                 }
 
                 function performMove(robot){
-                    let other
+                    let self = null
+                    let other = null
                     if(robot == opponent){
+                        self = robot
                         other = attacker
-                        console.log(other)
                         move_used = randomElement(robot.moves)
                         printToScreen(`${robot.name} used ${move_used.name}, ${move_used.summary}!`)
                     }
                     else if(robot == attacker){
+                        self = robot
                         other = opponent
-                        console.log(other)
                         move_used = move
                         printToScreen(`${robot.name} used ${move_used.name}, ${move_used.summary}!`)
                     }
+
                     if(move_used.category == 'offensive'){
-                        strength = (Math.random() * ((robot.attack + move_used.value) / 2) - (Math.random() * other.defense / 3)) / 2
+                        strength = (Math.random() * ((self.attack + move_used.value) / 2) - (Math.random() * other.defense / 3)) / 2
                         if(strength < 0){
                             strength = 0
                         }
                         other.health -= strength
                         printToScreen(`This caused ${Math.round(strength)} damage!`)
-                        robot.battery_life -= move_used.cost
+                        self.battery_life -= move_used.cost
                     }
                     else if(move_used.category == 'stat-based'){
 
                         let target = null
 
                         if(move_used.target == 'self'){
-                            target = robot
+                            target = self
                         }
                         else if(move_used.target == 'other'){
                             target = other
-                            console.log(target)
                         }
 
                         if(move_used.stat == 'health'){
@@ -350,10 +409,18 @@ document.addEventListener('DOMContentLoaded', () =>{
                             target.attack = target.attack * (1 + move_used.value/100)
                         }
                         else if(move_used.stat == 'defense'){
-                            target.health = target.health * (1 + move_used.value/100)
+                            target.defense = target.defense * (1 + move_used.value/100)
                         }
-                        robot.battery_life -= move_used.cost
-                        console.log(target)
+                        self.battery_life -= move_used.cost
+
+                        //Making sure Health doesn't become negative
+                        if(self.health < 0){
+                            self.health = 0
+                        }
+                        
+                        if(opponent.health < 0){
+                            opponent.health = 0
+                        }
                     }
                 }
             })
@@ -362,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () =>{
 
         let quitBtn = document.createElement('button')
         quitBtn.className = 'quit-button'
-        quitBtn.innerText = '___Quit___'
+        quitBtn.innerText = "   Quit   \n ____"
         controlPanel.append(quitBtn)
 
         quitBtn.addEventListener('click', () => {
