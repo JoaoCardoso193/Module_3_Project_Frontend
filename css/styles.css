@@ -58,6 +58,14 @@ background-color: rgb(5, 155, 255)
     justify-content: center
 }
 
+.battle-grid{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+
+}
+
 .fight-button{
     background-color: rgb(228, 109, 13);
 }
@@ -68,4 +76,32 @@ background-color: rgb(5, 155, 255)
 
 .fight-button:active{
     background-color: yellow
+}
+
+.offensive-move-button{
+    background-color: rgba(255, 0, 0, 0.5)
+}
+
+.stat-based-move-button{
+    background-color: rgba(9, 90, 241, 0.5)
+}
+
+.quit-button{
+    background-color: rgba(255, 4, 4, 0.753)
+}
+
+.battle-box{
+    background-color: rgba(88, 218, 189, 0.329);
+    vertical-align: top;
+    height: 30rem;
+    width: 32rem;
+    overflow-y: auto;
+}
+
+.attacker-box{
+    display: stretch;
+    align-items: center;}
+
+.control-panel{
+    align-self: stretch;
 }
