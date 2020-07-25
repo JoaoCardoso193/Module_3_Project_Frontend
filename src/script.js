@@ -327,17 +327,19 @@ document.addEventListener('DOMContentLoaded', () =>{
                                 attackBtns.forEach(button => button.disabled = false)
                             }
                             else{
+                                displayStats()
                                 gameOver(attacker, opponent)
                             }
                         })
                     }
                     else{
+                        displayStats()
                         gameOver(attacker, opponent)
                     }
                 }
 
                 function gameFinished(attacker, opponent){
-                    if(attacker.health <= 0 || attacker.battery_life <= 0 || opponent.health <= 0 || opponent.battery_life <= 0){
+                    if(attacker.health <= 0 || opponent.health <= 0){
                         return true
                     }
                     else{
@@ -347,43 +349,64 @@ document.addEventListener('DOMContentLoaded', () =>{
 
                 function gameOver(attacker, opponent){
                     if(attacker.health <= 0){
-                        printToScreen('Game over, you ran out of health.')
-                    }
-                    else if(attacker.battery_life <=0){
-                        printToScreen('Game over, you ran out of battery life.')
+                        printToScreen('\nGame over, you ran out of health.')
                     }
                     else if(opponent.health <= 0){
-                        printToScreen('The opponent ran out of health, you win!')
-                    }
-                    else if(opponent.battery_life <= 0){
-                        printToScreen('The opponent ran out of battery life, you win!')
+                        printToScreen('\nThe opponent ran out of health, you win!')
                     }
                 }
 
+
                 function performMove(robot){
+                    let struggle = {
+                        "id":99,
+                        "name":"Struggle",
+                        "summary":"a self-damaging last resort",
+                        "description":"causes very little damage to the opponent and takes away 1 health point from the user",
+                        "category":"offensive",
+                        "target":"other",
+                        "stat":"health",
+                        "value": 5,
+                        "cost":0
+                    }
+
                     let self = null
                     let other = null
                     if(robot == opponent){
                         self = robot
                         other = attacker
-                        move_used = randomElement(robot.moves)
+                        let available_moves = self.moves.filter(move => move.cost <= self.battery_life)
+                        if(available_moves.length > 0){
+                            move_used = randomElement(available_moves)
+                        }
+                        else{
+                            move_used = struggle 
+                        }
                         printToScreen(`${robot.name} used ${move_used.name}, ${move_used.summary}!`)
                     }
                     else if(robot == attacker){
                         self = robot
                         other = opponent
-                        move_used = move
+                        if(move.cost <= self.battery_life){
+                            move_used = move
+                        }
+                        else{
+                            move_used = struggle
+                        }
                         printToScreen(`${robot.name} used ${move_used.name}, ${move_used.summary}!`)
                     }
 
                     if(move_used.category == 'offensive'){
-                        strength = (Math.random() * ((self.attack + move_used.value) / 2) - (Math.random() * other.defense / 3)) / 2
-                        if(strength < 0){
-                            strength = 0
+                        let strength = (Math.random() * ((self.attack + move_used.value) / 2) - (Math.random() * other.defense / 3))
+                        if(strength < 3){
+                            strength = 3 //every move will do at least 3 damage
                         }
                         other.health -= strength
                         printToScreen(`This caused ${Math.round(strength)} damage!`)
-                        self.battery_life -= move_used.cost
+
+                        if(move_used.name == "Struggle"){
+                            self.health -= 5
+                        }
                     }
                     else if(move_used.category == 'stat-based'){
 
@@ -411,16 +434,18 @@ document.addEventListener('DOMContentLoaded', () =>{
                         else if(move_used.stat == 'defense'){
                             target.defense = target.defense * (1 + move_used.value/100)
                         }
-                        self.battery_life -= move_used.cost
+                    }
 
-                        //Making sure Health doesn't become negative
-                        if(self.health < 0){
-                            self.health = 0
-                        }
+                    //Subtracting Move cost
+                    self.battery_life -= move_used.cost
+
+                    //Making sure Health doesn't become negative
+                    if(self.health < 0){
+                        self.health = 0
+                    }
                         
-                        if(opponent.health < 0){
-                            opponent.health = 0
-                        }
+                    if(opponent.health < 0){
+                        opponent.health = 0
                     }
                 }
             })
