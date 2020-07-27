@@ -3,10 +3,11 @@ document.addEventListener('DOMContentLoaded', () =>{
 
 
     //Important definitions
+    currentUserName = null
 
 
     //Actions
-    mainMenu()
+    welcome()
 
 
     //Functions
@@ -20,6 +21,50 @@ document.addEventListener('DOMContentLoaded', () =>{
 
     const sleep = (milliseconds) => {
         return new Promise(resolve => setTimeout(resolve, milliseconds))
+    }
+
+    function welcome(){
+        document.body.innerHTML = ""
+
+        let header = ce('h1')
+        header.innerText = "Welcome"
+
+        let loginBtn = ce('button')
+        loginBtn.innerText = "Log In"
+
+        document.body.append(header, loginBtn)
+
+        loginBtn.addEventListener('click', () => {
+            logIn()
+        })
+    }
+
+    function logIn(){
+        document.body.innerHTML = ""
+
+        let header = ce('h1')
+        header.innerText = "Log In"
+
+        let loginForm = ce('form')
+
+        let userNameLabel = ce('label')
+        userNameLabel.innerText = 'User Name: '
+
+        let userNameInput = ce('input')
+        userNameInput.name = "username"
+        userNameInput.type = 'text'
+
+        let submit = ce('input')
+        submit.type = 'submit'
+
+        loginForm.append(header, userNameLabel, userNameInput, submit)
+        document.body.append(loginForm)
+
+        loginForm.addEventListener('submit', () => {
+            event.preventDefault()
+            currentUserName = event.target[0].value
+            mainMenu()
+        })
     }
 
     function mainMenu(){
@@ -54,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () =>{
 
         fetch('http://localhost:3000/users')
         .then(res => res.json())
-        .then(users => users.filter(user => user.id == 1)) //change to current user's id
+        .then(users => users.filter(user => user.user_name == currentUserName))
         .then(user => user.map(user => user.robots))
         .then(robots => showMyRobots(robots, mode))
     }
