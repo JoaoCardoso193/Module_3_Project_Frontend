@@ -444,8 +444,8 @@ document.addEventListener('DOMContentLoaded', () =>{
                         self.health = 0
                     }
                         
-                    if(opponent.health < 0){
-                        opponent.health = 0
+                    if(other.health < 0){
+                        other.health = 0
                     }
                 }
             })

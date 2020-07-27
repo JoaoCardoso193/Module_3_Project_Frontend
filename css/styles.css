@@ -1,3 +1,6 @@
+body{
+    background-color: white;
+}
 .robot-card {
     background-color: rgb(33, 143, 216);
     text-align: center;
