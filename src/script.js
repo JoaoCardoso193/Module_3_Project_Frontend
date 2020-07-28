@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         allRobotsBtn.innerText = 'All Robots'
 
         allRobotsBtn.addEventListener('click', () => {
-            fetchAllRobots('display')
+            fetchAllRobots('all')
         })
 
         let playBtn = ce('button')
@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         createBtn.innerText = 'Create a Robot!'
 
         createBtn.addEventListener('click', () => {
-            createScreen()
+            createScreen(mode = 'create')
         })
 
         let userSettingsBtn = ce('button')
@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         document.body.append(welcomeUser, playBtn, myRobotsBtn, allRobotsBtn, createBtn, userSettingsBtn, logoutBtn)
     }
 
-    function createScreen(){
+    function createScreen(mode, bot = null){
         let partsToSend = null
 
         fetch('http://localhost:3000/parts')
@@ -285,12 +285,12 @@ document.addEventListener('DOMContentLoaded', () =>{
         .then(() => {
             fetch('http://localhost:3000/moves')
             .then(res => res.json())
-            .then(moves => createForm(partsToSend, moves))
+            .then(moves => createForm(partsToSend, moves, mode, bot))
         }
         )
     }
 
-    function createForm(parts, moves){
+    function createForm(parts, moves, mode, bot){
         document.body.innerHTML = ""
 
         let robotForm = ce('form')
@@ -407,23 +407,50 @@ document.addEventListener('DOMContentLoaded', () =>{
         robotForm.addEventListener('submit', () => {
             event.preventDefault()
 
-            let configObj = {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    "author": event.target[0].value,
-                    "name": event.target[1].value,
-                    "parts": [event.target[2].value, event.target[3].value, event.target[4].value],
-                    "moves": [event.target[5].value, event.target[6].value, event.target[7].value]
-                })
+            let configObj = {}
+
+            if(mode == 'create'){
+                configObj = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "author": event.target[0].value,
+                        "name": event.target[1].value,
+                        "parts": [event.target[2].value, event.target[3].value, event.target[4].value],
+                        "moves": [event.target[5].value, event.target[6].value, event.target[7].value]
+                    })
+                }
+            }
+            else if(mode == 'edit'){
+                configObj = {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "id": bot.id,
+                        "author": event.target[0].value,
+                        "name": event.target[1].value,
+                        "parts": [event.target[2].value, event.target[3].value, event.target[4].value],
+                        "moves": [event.target[5].value, event.target[6].value, event.target[7].value]
+                    })
+                }
+            }
+
+            if(mode == 'create'){
+                fetch('http://localhost:3000/robots', configObj)
+                .then(res => res.json())
+                .then(() => fetchMyRobots('display'))
+            }
+            else if(mode == 'edit'){
+                fetch(`http://localhost:3000/robots/${bot.id}`, configObj)
+                .then(res => res.json())
+                .then(() => fetchMyRobots('display'))
             }
             
-            fetch('http://localhost:3000/robots', configObj)
-            .then(res => res.json())
-            .then(console.log)
-            .then(() => fetchMyRobots('display'))
+
             // .then(robot =>{
             //     let configObj = {
             //         method: "POST",
@@ -579,6 +606,17 @@ document.addEventListener('DOMContentLoaded', () =>{
                 setBattle(robot)
             })
             card.append(battleBtn)
+        }
+
+        if (mode == 'display'){
+            editBtn = ce('button')
+            editBtn.innerText = 'Edit Robot'
+
+            editBtn.addEventListener('click', () => {
+                createScreen(mode = 'edit', bot = robot)
+            })
+
+            card.append(editBtn)
         }
     
         grid.append(card)
