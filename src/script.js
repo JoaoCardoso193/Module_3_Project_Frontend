@@ -150,12 +150,19 @@ document.addEventListener('DOMContentLoaded', () =>{
         let editUserNameBtn = ce('button')
         editUserNameBtn.innerText = "Edit User Name"
 
+        let deleteUserBtn = ce('button')
+        deleteUserBtn.innerText = "Delete Account"
+
 
         editUserNameBtn.addEventListener('click', () => {
             editUserName()
         })
 
-        document.body.append(editUserNameBtn)
+        deleteUserBtn.addEventListener('click', () => {
+            deleteUser()
+        })
+
+        document.body.append(editUserNameBtn, deleteUserBtn)
     }
 
     function editUserName(){
@@ -195,6 +202,24 @@ document.addEventListener('DOMContentLoaded', () =>{
                 currentUser = user
                 mainMenu()
             })
+        })
+    }
+
+    function deleteUser(){
+
+        let configObj = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "user_id": currentUser.id
+            })
+        }
+        fetch(`http://localhost:3000/users/${currentUser.id}`, configObj)
+        .then(() => {
+            currentUser = null
+            welcome()
         })
     }
 
