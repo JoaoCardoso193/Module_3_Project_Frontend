@@ -4,8 +4,7 @@ document.addEventListener('DOMContentLoaded', () =>{
 
     //Important definitions
     var currentUser = null
-    var currentUserName = null
-    var currentUserID = null
+
 
 
     //Actions
@@ -86,8 +85,6 @@ document.addEventListener('DOMContentLoaded', () =>{
                 let user = users.find(user => user.user_name == input)
                 if(user){
                     currentUser = user
-                    currentUserName = currentUser.user_name
-                    currentUserID = currentUser.id
                     mainMenu()
                 }
                 else{
@@ -98,8 +95,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     }
 
     function logOut(){
-        currentUserName = null
-        currentUserID = null
+        currentUser = null
         welcome()
     }
 
@@ -142,8 +138,7 @@ document.addEventListener('DOMContentLoaded', () =>{
             fetch('http://localhost:3000/users', configObj)
             .then(res => res.json())
             .then(user => {
-                currentUserName = user.user_name
-                currentUserID = user.user_id
+                currentUser = user
                 mainMenu()
             })
         })
@@ -190,16 +185,14 @@ document.addEventListener('DOMContentLoaded', () =>{
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    "old_user_name": currentUserName,
+                    "old_user_name": currentUser.user_name,
                     "new_user_name": event.target[0].value
                 })
             }
-            fetch(`http://localhost:3000/users/${currentUserID}`, configObj)
+            fetch(`http://localhost:3000/users/${currentUser.id}`, configObj)
             .then(res => res.json())
             .then(user => {
                 currentUser = user
-                currentUserName = user.user_name
-                currentUserID = user.id
                 mainMenu()
             })
         })
@@ -209,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         document.body.innerHTML = ""
 
         let welcomeUser = ce('h1')
-        welcomeUser.innerText = `Welcome ${currentUserName}!`
+        welcomeUser.innerText = `Welcome ${currentUser.user_name}!`
 
         let myRobotsBtn = ce('button')
         myRobotsBtn.innerText = 'My Robots'
@@ -280,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         let author = ce('input')
         author.type = 'hidden'
         author.name = 'author'
-        author.value = currentUserName
+        author.value = currentUser.user_name
 
         let robotNameLabel = ce('label')
         robotNameLabel.innerText = 'Robot Name: '
@@ -428,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () =>{
 
         fetch('http://localhost:3000/users')
         .then(res => res.json())
-        .then(users => users.filter(user => user.user_name == currentUserName))
+        .then(users => users.filter(user => user.user_name == currentUser.user_name))
         .then(user => user.map(user => user.robots))
         .then(robots => showMyRobots(robots, mode))
     }
