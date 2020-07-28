@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () =>{
 
 
     //Important definitions
-    currentUserName = null
+    var currentUserName = null
 
 
     //Actions
@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () =>{
 
         let submit = ce('input')
         submit.type = 'submit'
+        submit.value = 'Log In'
 
         loginForm.append(header, userNameLabel, userNameInput, submit)
         document.body.append(loginForm)
@@ -91,7 +92,183 @@ document.addEventListener('DOMContentLoaded', () =>{
             fetchMyRobots('fight')
         })
 
-        document.body.append(playBtn, myRobotsBtn, allRobotsBtn)
+        let createBtn = ce('button')
+        createBtn.innerText = 'Create a Robot!'
+
+        createBtn.addEventListener('click', () => {
+            createScreen()
+        })
+
+        document.body.append(playBtn, myRobotsBtn, allRobotsBtn, createBtn)
+    }
+
+    function createScreen(){
+        let partsToSend = null
+
+        fetch('http://localhost:3000/parts')
+        .then(res => res.json())
+        .then(parts => {
+            partsToSend = parts
+        })
+        .then(() => {
+            fetch('http://localhost:3000/moves')
+            .then(res => res.json())
+            .then(moves => createForm(partsToSend, moves))
+        }
+        )
+    }
+
+    function createForm(parts, moves){
+        document.body.innerHTML = ""
+
+        let robotForm = ce('form')
+
+        let author = ce('input')
+        author.type = 'hidden'
+        author.name = 'author'
+        author.value = currentUserName
+
+        let robotNameLabel = ce('label')
+        robotNameLabel.innerText = 'Robot Name: '
+
+        let robotNameInput = ce('input')
+        robotNameInput.name = "name"
+        robotNameInput.type = 'text'
+
+        let robotHeadLabel = ce('label')
+        robotHeadLabel.innerText = "Robot Head: "
+        
+        let robotHeadSelect = ce('select')
+        robotHeadSelect.name = "heads"
+        robotHeadSelect.id = 'heads'
+
+        heads = parts.filter(part => part.category == 'head')
+
+        heads.forEach(head => {
+            let option = ce('option')
+            option.value = head.id
+            option.innerText = head.name
+
+            robotHeadSelect.append(option)
+        })
+
+        let robotTorsoLabel = ce('label')
+        robotTorsoLabel.innerText = "Robot Torso: "
+
+        let robotTorsoSelect = ce('select')
+        robotTorsoSelect.name = "torsos"
+        robotTorsoSelect.id = 'torsos'
+
+        torsos = parts.filter(part => part.category == 'torso')
+
+        torsos.forEach(torso => {
+            let option = ce('option')
+            option.value = torso.id
+            option.innerText = torso.name
+
+            robotTorsoSelect.append(option)
+        })
+
+        let robotLowerBodiesLabel = ce('label')
+        robotLowerBodiesLabel.innerText = "Robot Lower Body: "
+
+        let robotLowerBodiesSelect = ce('select')
+        robotLowerBodiesSelect.name = "torsos"
+        robotLowerBodiesSelect.id = 'torsos'
+
+        lowerBodies = parts.filter(part => part.category == 'lower_body')
+
+        lowerBodies.forEach(lowerBody => {
+            let option = ce('option')
+            option.value = lowerBody.id
+            option.innerText = lowerBody.name
+
+            robotLowerBodiesSelect.append(option)
+        })
+
+        let move1Label = ce('label')
+        move1Label.innerText = "Move 1: "
+
+        let move1Select = ce('select')
+
+        moves.forEach(move => {
+            let option = ce('option')
+            option.value = move.id
+            option.innerText = move.name
+
+            move1Select.append(option)
+        })
+
+        let move2Label = ce('label')
+        move2Label.innerText = "Move 2: "
+
+        let move2Select = ce('select')
+
+        moves.forEach(move => {
+            let option = ce('option')
+            option.value = move.id
+            option.innerText = move.name
+
+            move2Select.append(option)
+        })
+
+        let move3Label = ce('label')
+        move3Label.innerText = "Move 3: "
+
+        let move3Select = ce('select')
+
+        moves.forEach(move => {
+            let option = ce('option')
+            option.value = move.id
+            option.innerText = move.name
+
+            move3Select.append(option)
+        })
+
+        let submit = ce('input')
+        submit.type = "submit"
+        submit.value = "Create!"
+
+        robotForm.append(author, robotNameLabel, robotNameInput, robotHeadLabel, robotHeadSelect, robotTorsoLabel, robotTorsoSelect, robotLowerBodiesLabel, robotLowerBodiesSelect, move1Label, move1Select, move2Label, move2Select, move3Label, move3Select, submit)
+        document.body.append(robotForm)
+
+        robotForm.addEventListener('submit', () => {
+            event.preventDefault()
+
+            let t2  = event.target[2].value
+            console.log(t2)
+
+            let configObj = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "author": event.target[0].value,
+                    "name": event.target[1].value,
+                    "parts": [event.target[2].value, event.target[3].value, event.target[4].value],
+                    "moves": [event.target[5].value, event.target[6].value, event.target[7].value]
+                })
+            }
+            
+            fetch('http://localhost:3000/robots', configObj)
+            .then(res => res.json())
+            .then(() => fetchMyRobots('display'))
+            // .then(robot =>{
+            //     let configObj = {
+            //         method: "POST",
+            //         headers: {
+            //             "Content-Type": "application/json"
+            //         },
+            //         body: JSON.stringify({
+            //             "head": event.target[2].value,
+            //             "torso": event.target[3].value,
+            //             "lower_body": event.target[4].value
+            //         })
+            //     }
+            //     fetch('http://localhost:3000/robot_parts')
+            // })
+        })
     }
     
     function fetchMyRobots(mode) {
