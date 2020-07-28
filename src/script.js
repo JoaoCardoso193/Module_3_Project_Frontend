@@ -34,18 +34,31 @@ document.addEventListener('DOMContentLoaded', () =>{
         let loginBtn = ce('button')
         loginBtn.innerText = "Log In"
 
-        document.body.append(header, loginBtn)
+        let signupBtn = ce('button')
+        signupBtn.innerText = "Sign Up"
+
+        document.body.append(header, loginBtn, signupBtn)
 
         loginBtn.addEventListener('click', () => {
             logIn()
         })
+
+        signupBtn.addEventListener('click', () => {
+            signUp()
+        })
     }
 
-    function logIn(){
+    function logIn(invalid = false){
         document.body.innerHTML = ""
 
         let header = ce('h1')
         header.innerText = "Log In"
+
+        let message = ce('p')
+
+        if(invalid){
+            message.innerText = "Invalid User Name, please try again."
+        }
 
         let loginForm = ce('form')
 
@@ -60,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         submit.type = 'submit'
         submit.value = 'Log In'
 
-        loginForm.append(header, userNameLabel, userNameInput, submit)
+        loginForm.append(header, message, userNameLabel, userNameInput, submit)
         document.body.append(loginForm)
 
         loginForm.addEventListener('submit', () => {
@@ -71,6 +84,64 @@ document.addEventListener('DOMContentLoaded', () =>{
             .then(res => res.json())
             .then(users => {
                 let user = users.find(user => user.user_name == input)
+                if(user){
+                    currentUser = user
+                    currentUserName = currentUser.user_name
+                    currentUserID = currentUser.id
+                    mainMenu()
+                }
+                else{
+                    logIn(invalid = true)
+                }
+            })
+        })
+    }
+
+    function logOut(){
+        currentUserName = null
+        currentUserID = null
+        welcome()
+    }
+
+    function signUp(){
+        document.body.innerHTML = ""
+
+        let header = ce('h1')
+        header.innerText = "Sign Up"
+
+        let signupForm = ce('form')
+
+        let userNameLabel = ce('label')
+        userNameLabel.innerText = 'User Name: '
+
+        let userNameInput = ce('input')
+        userNameInput.name = "username"
+        userNameInput.type = 'text'
+
+        let submit = ce('input')
+        submit.type = 'submit'
+        submit.value = 'Sign Up'
+
+        signupForm.append(header, userNameLabel, userNameInput, submit)
+        document.body.append(signupForm)
+
+        signupForm.addEventListener('submit', () => {
+            event.preventDefault()
+            let input = event.target[0].value
+
+            let configObj = {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "user_name": input
+                })
+            }
+
+            fetch('http://localhost:3000/users', configObj)
+            .then(res => res.json())
+            .then(user => {
                 currentUserName = user.user_name
                 currentUserID = user.user_id
                 mainMenu()
@@ -78,8 +149,67 @@ document.addEventListener('DOMContentLoaded', () =>{
         })
     }
 
+    function userSettings(){
+        document.body.innerHTML = ""
+
+        let editUserNameBtn = ce('button')
+        editUserNameBtn.innerText = "Edit User Name"
+
+
+        editUserNameBtn.addEventListener('click', () => {
+            editUserName()
+        })
+
+        document.body.append(editUserNameBtn)
+    }
+
+    function editUserName(){
+        let editForm = ce('form')
+
+        let newUserNameLabel = ce('label')
+        newUserNameLabel.innerText = "Enter New User Name: "
+
+        let newUserNameInput = ce('input')
+        newUserNameInput.name = "username"
+        newUserNameInput.type = 'text'
+
+        let submit = ce('input')
+        submit.type = 'submit'
+        submit.value = 'Submit'
+
+        editForm.append(newUserNameLabel, newUserNameInput, submit)
+
+        document.body.append(editForm)
+
+        editForm.addEventListener('submit', () => {
+            event.preventDefault()
+
+            let configObj = {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "old_user_name": currentUserName,
+                    "new_user_name": event.target[0].value
+                })
+            }
+            fetch(`http://localhost:3000/users/${currentUserID}`, configObj)
+            .then(res => res.json())
+            .then(user => {
+                currentUser = user
+                currentUserName = user.user_name
+                currentUserID = user.id
+                mainMenu()
+            })
+        })
+    }
+
     function mainMenu(){
         document.body.innerHTML = ""
+
+        let welcomeUser = ce('h1')
+        welcomeUser.innerText = `Welcome ${currentUserName}!`
 
         let myRobotsBtn = ce('button')
         myRobotsBtn.innerText = 'My Robots'
@@ -109,7 +239,21 @@ document.addEventListener('DOMContentLoaded', () =>{
             createScreen()
         })
 
-        document.body.append(playBtn, myRobotsBtn, allRobotsBtn, createBtn)
+        let userSettingsBtn = ce('button')
+        userSettingsBtn.innerText = "User Settings"
+
+        userSettingsBtn.addEventListener('click', () => {
+            userSettings()
+        })
+
+        let logoutBtn = ce('button')
+        logoutBtn.innerText = 'Logout'
+
+        logoutBtn.addEventListener('click', () => {
+            logOut()
+        })
+
+        document.body.append(welcomeUser, playBtn, myRobotsBtn, allRobotsBtn, createBtn, userSettingsBtn, logoutBtn)
     }
 
     function createScreen(){
@@ -245,9 +389,6 @@ document.addEventListener('DOMContentLoaded', () =>{
         robotForm.addEventListener('submit', () => {
             event.preventDefault()
 
-            let t2  = event.target[2].value
-            console.log(t2)
-
             let configObj = {
                 method: "POST",
                 headers: {
@@ -263,6 +404,7 @@ document.addEventListener('DOMContentLoaded', () =>{
             
             fetch('http://localhost:3000/robots', configObj)
             .then(res => res.json())
+            .then(console.log)
             .then(() => fetchMyRobots('display'))
             // .then(robot =>{
             //     let configObj = {
@@ -351,7 +493,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         name.innerText = robot.name
     
         let author = ce('h4')
-        author.innerText = `Created by: ${robot.author}`
+        author.innerText = `Created by: ${robot.user.user_name}`
     
         let head = ce('img')
         head.src = robot.parts[0].image_url
