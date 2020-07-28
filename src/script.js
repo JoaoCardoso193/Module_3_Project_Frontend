@@ -3,7 +3,9 @@ document.addEventListener('DOMContentLoaded', () =>{
 
 
     //Important definitions
+    var currentUser = null
     var currentUserName = null
+    var currentUserID = null
 
 
     //Actions
@@ -63,8 +65,16 @@ document.addEventListener('DOMContentLoaded', () =>{
 
         loginForm.addEventListener('submit', () => {
             event.preventDefault()
-            currentUserName = event.target[0].value
-            mainMenu()
+            let input = event.target[0].value
+
+            fetch('http://localhost:3000/users')
+            .then(res => res.json())
+            .then(users => {
+                let user = users.find(user => user.user_name == input)
+                currentUserName = user.user_name
+                currentUserID = user.user_id
+                mainMenu()
+            })
         })
     }
 
