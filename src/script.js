@@ -609,17 +609,38 @@ document.addEventListener('DOMContentLoaded', () =>{
         }
 
         if (mode == 'display'){
-            editBtn = ce('button')
+            let editBtn = ce('button')
             editBtn.innerText = 'Edit Robot'
 
             editBtn.addEventListener('click', () => {
                 createScreen(mode = 'edit', bot = robot)
             })
 
-            card.append(editBtn)
+            let deleteBtn = ce('button')
+            deleteBtn.innerText = 'Delete Robot'
+
+            deleteBtn.addEventListener('click', () => {
+                deleteRobot(robot)
+            })
+
+            card.append(editBtn, deleteBtn)
         }
     
         grid.append(card)
+    }
+
+    function deleteRobot(robot){
+        let configObj = {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "robot_id": robot.id
+            })
+        }
+        fetch(`http://localhost:3000/robots/${robot.id}`, configObj)
+        .then(mainMenu())
     }
 
     function setBattle(attacker){
