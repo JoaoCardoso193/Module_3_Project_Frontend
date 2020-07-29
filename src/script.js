@@ -147,12 +147,18 @@ document.addEventListener('DOMContentLoaded', () =>{
     function userSettings(){
         document.body.innerHTML = ""
 
+        let homeBtn = ce('button')
+        homeBtn.innerText = 'Home'
+
         let editUserNameBtn = ce('button')
         editUserNameBtn.innerText = "Edit User Name"
 
         let deleteUserBtn = ce('button')
         deleteUserBtn.innerText = "Delete Account"
 
+        homeBtn.addEventListener('click', () => {
+            mainMenu()
+        })
 
         editUserNameBtn.addEventListener('click', () => {
             editUserName()
@@ -162,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () =>{
             deleteUser()
         })
 
-        document.body.append(editUserNameBtn, deleteUserBtn)
+        document.body.append(homeBtn, editUserNameBtn, deleteUserBtn)
     }
 
     function editUserName(){
@@ -293,6 +299,9 @@ document.addEventListener('DOMContentLoaded', () =>{
     function createForm(parts, moves, mode, bot){
         document.body.innerHTML = ""
 
+        let homeBtn = ce('button')
+        homeBtn.innerText = "Home"
+
         let robotForm = ce('form')
 
         let author = ce('input')
@@ -402,7 +411,11 @@ document.addEventListener('DOMContentLoaded', () =>{
         submit.value = "Create!"
 
         robotForm.append(author, robotNameLabel, robotNameInput, robotHeadLabel, robotHeadSelect, robotTorsoLabel, robotTorsoSelect, robotLowerBodiesLabel, robotLowerBodiesSelect, move1Label, move1Select, move2Label, move2Select, move3Label, move3Select, submit)
-        document.body.append(robotForm)
+        document.body.append(homeBtn, robotForm)
+
+        homeBtn.addEventListener('click', () => {
+            mainMenu()
+        })
 
         robotForm.addEventListener('submit', () => {
             event.preventDefault()
