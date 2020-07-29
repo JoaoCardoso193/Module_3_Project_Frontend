@@ -1,8 +1,11 @@
+body{
+    background-color: white;
+}
 .robot-card {
     background-color: rgb(33, 143, 216);
     text-align: center;
     border: grey solid 1px;
-    padding: 0rem;
+    padding: 2rem;
     width: 26rem;
     height: 46rem;
     display: inline-grid;

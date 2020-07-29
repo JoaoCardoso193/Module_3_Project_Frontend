@@ -3,10 +3,12 @@ document.addEventListener('DOMContentLoaded', () =>{
 
 
     //Important definitions
+    var currentUser = null
+
 
 
     //Actions
-    mainMenu()
+    welcome()
 
 
     //Functions
@@ -22,8 +24,210 @@ document.addEventListener('DOMContentLoaded', () =>{
         return new Promise(resolve => setTimeout(resolve, milliseconds))
     }
 
+    function welcome(){
+        document.body.innerHTML = ""
+
+        let header = ce('h1')
+        header.innerText = "Welcome"
+
+        let loginBtn = ce('button')
+        loginBtn.innerText = "Log In"
+
+        let signupBtn = ce('button')
+        signupBtn.innerText = "Sign Up"
+
+        document.body.append(header, loginBtn, signupBtn)
+
+        loginBtn.addEventListener('click', () => {
+            logIn()
+        })
+
+        signupBtn.addEventListener('click', () => {
+            signUp()
+        })
+    }
+
+    function logIn(invalid = false){
+        document.body.innerHTML = ""
+
+        let header = ce('h1')
+        header.innerText = "Log In"
+
+        let message = ce('p')
+
+        if(invalid){
+            message.innerText = "Invalid User Name, please try again."
+        }
+
+        let loginForm = ce('form')
+
+        let userNameLabel = ce('label')
+        userNameLabel.innerText = 'User Name: '
+
+        let userNameInput = ce('input')
+        userNameInput.name = "username"
+        userNameInput.type = 'text'
+
+        let submit = ce('input')
+        submit.type = 'submit'
+        submit.value = 'Log In'
+
+        loginForm.append(header, message, userNameLabel, userNameInput, submit)
+        document.body.append(loginForm)
+
+        loginForm.addEventListener('submit', () => {
+            event.preventDefault()
+            let input = event.target[0].value
+
+            fetch('http://localhost:3000/users')
+            .then(res => res.json())
+            .then(users => {
+                let user = users.find(user => user.user_name == input)
+                if(user){
+                    currentUser = user
+                    mainMenu()
+                }
+                else{
+                    logIn(invalid = true)
+                }
+            })
+        })
+    }
+
+    function logOut(){
+        currentUser = null
+        welcome()
+    }
+
+    function signUp(){
+        document.body.innerHTML = ""
+
+        let header = ce('h1')
+        header.innerText = "Sign Up"
+
+        let signupForm = ce('form')
+
+        let userNameLabel = ce('label')
+        userNameLabel.innerText = 'User Name: '
+
+        let userNameInput = ce('input')
+        userNameInput.name = "username"
+        userNameInput.type = 'text'
+
+        let submit = ce('input')
+        submit.type = 'submit'
+        submit.value = 'Sign Up'
+
+        signupForm.append(header, userNameLabel, userNameInput, submit)
+        document.body.append(signupForm)
+
+        signupForm.addEventListener('submit', () => {
+            event.preventDefault()
+            let input = event.target[0].value
+
+            let configObj = {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "user_name": input
+                })
+            }
+
+            fetch('http://localhost:3000/users', configObj)
+            .then(res => res.json())
+            .then(user => {
+                currentUser = user
+                mainMenu()
+            })
+        })
+    }
+
+    function userSettings(){
+        document.body.innerHTML = ""
+
+        let editUserNameBtn = ce('button')
+        editUserNameBtn.innerText = "Edit User Name"
+
+        let deleteUserBtn = ce('button')
+        deleteUserBtn.innerText = "Delete Account"
+
+
+        editUserNameBtn.addEventListener('click', () => {
+            editUserName()
+        })
+
+        deleteUserBtn.addEventListener('click', () => {
+            deleteUser()
+        })
+
+        document.body.append(editUserNameBtn, deleteUserBtn)
+    }
+
+    function editUserName(){
+        let editForm = ce('form')
+
+        let newUserNameLabel = ce('label')
+        newUserNameLabel.innerText = "Enter New User Name: "
+
+        let newUserNameInput = ce('input')
+        newUserNameInput.name = "username"
+        newUserNameInput.type = 'text'
+
+        let submit = ce('input')
+        submit.type = 'submit'
+        submit.value = 'Submit'
+
+        editForm.append(newUserNameLabel, newUserNameInput, submit)
+
+        document.body.append(editForm)
+
+        editForm.addEventListener('submit', () => {
+            event.preventDefault()
+
+            let configObj = {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "old_user_name": currentUser.user_name,
+                    "new_user_name": event.target[0].value
+                })
+            }
+            fetch(`http://localhost:3000/users/${currentUser.id}`, configObj)
+            .then(res => res.json())
+            .then(user => {
+                currentUser = user
+                mainMenu()
+            })
+        })
+    }
+
+    function deleteUser(){
+
+        let configObj = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "user_id": currentUser.id
+            })
+        }
+        fetch(`http://localhost:3000/users/${currentUser.id}`, configObj)
+        .then(() => {
+            currentUser = null
+            welcome()
+        })
+    }
+
     function mainMenu(){
         document.body.innerHTML = ""
+
+        let welcomeUser = ce('h1')
+        welcomeUser.innerText = `Welcome ${currentUser.user_name}!`
 
         let myRobotsBtn = ce('button')
         myRobotsBtn.innerText = 'My Robots'
@@ -36,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         allRobotsBtn.innerText = 'All Robots'
 
         allRobotsBtn.addEventListener('click', () => {
-            fetchAllRobots('display')
+            fetchAllRobots('all')
         })
 
         let playBtn = ce('button')
@@ -46,7 +250,222 @@ document.addEventListener('DOMContentLoaded', () =>{
             fetchMyRobots('fight')
         })
 
-        document.body.append(playBtn, myRobotsBtn, allRobotsBtn)
+        let createBtn = ce('button')
+        createBtn.innerText = 'Create a Robot!'
+
+        createBtn.addEventListener('click', () => {
+            createScreen(mode = 'create')
+        })
+
+        let userSettingsBtn = ce('button')
+        userSettingsBtn.innerText = "User Settings"
+
+        userSettingsBtn.addEventListener('click', () => {
+            userSettings()
+        })
+
+        let logoutBtn = ce('button')
+        logoutBtn.innerText = 'Logout'
+
+        logoutBtn.addEventListener('click', () => {
+            logOut()
+        })
+
+        document.body.append(welcomeUser, playBtn, myRobotsBtn, allRobotsBtn, createBtn, userSettingsBtn, logoutBtn)
+    }
+
+    function createScreen(mode, bot = null){
+        let partsToSend = null
+
+        fetch('http://localhost:3000/parts')
+        .then(res => res.json())
+        .then(parts => {
+            partsToSend = parts
+        })
+        .then(() => {
+            fetch('http://localhost:3000/moves')
+            .then(res => res.json())
+            .then(moves => createForm(partsToSend, moves, mode, bot))
+        }
+        )
+    }
+
+    function createForm(parts, moves, mode, bot){
+        document.body.innerHTML = ""
+
+        let robotForm = ce('form')
+
+        let author = ce('input')
+        author.type = 'hidden'
+        author.name = 'author'
+        author.value = currentUser.user_name
+
+        let robotNameLabel = ce('label')
+        robotNameLabel.innerText = 'Robot Name: '
+
+        let robotNameInput = ce('input')
+        robotNameInput.name = "name"
+        robotNameInput.type = 'text'
+
+        let robotHeadLabel = ce('label')
+        robotHeadLabel.innerText = "Robot Head: "
+        
+        let robotHeadSelect = ce('select')
+        robotHeadSelect.name = "heads"
+        robotHeadSelect.id = 'heads'
+
+        heads = parts.filter(part => part.category == 'head')
+
+        heads.forEach(head => {
+            let option = ce('option')
+            option.value = head.id
+            option.innerText = head.name
+
+            robotHeadSelect.append(option)
+        })
+
+        let robotTorsoLabel = ce('label')
+        robotTorsoLabel.innerText = "Robot Torso: "
+
+        let robotTorsoSelect = ce('select')
+        robotTorsoSelect.name = "torsos"
+        robotTorsoSelect.id = 'torsos'
+
+        torsos = parts.filter(part => part.category == 'torso')
+
+        torsos.forEach(torso => {
+            let option = ce('option')
+            option.value = torso.id
+            option.innerText = torso.name
+
+            robotTorsoSelect.append(option)
+        })
+
+        let robotLowerBodiesLabel = ce('label')
+        robotLowerBodiesLabel.innerText = "Robot Lower Body: "
+
+        let robotLowerBodiesSelect = ce('select')
+        robotLowerBodiesSelect.name = "torsos"
+        robotLowerBodiesSelect.id = 'torsos'
+
+        lowerBodies = parts.filter(part => part.category == 'lower_body')
+
+        lowerBodies.forEach(lowerBody => {
+            let option = ce('option')
+            option.value = lowerBody.id
+            option.innerText = lowerBody.name
+
+            robotLowerBodiesSelect.append(option)
+        })
+
+        let move1Label = ce('label')
+        move1Label.innerText = "Move 1: "
+
+        let move1Select = ce('select')
+
+        moves.forEach(move => {
+            let option = ce('option')
+            option.value = move.id
+            option.innerText = move.name
+
+            move1Select.append(option)
+        })
+
+        let move2Label = ce('label')
+        move2Label.innerText = "Move 2: "
+
+        let move2Select = ce('select')
+
+        moves.forEach(move => {
+            let option = ce('option')
+            option.value = move.id
+            option.innerText = move.name
+
+            move2Select.append(option)
+        })
+
+        let move3Label = ce('label')
+        move3Label.innerText = "Move 3: "
+
+        let move3Select = ce('select')
+
+        moves.forEach(move => {
+            let option = ce('option')
+            option.value = move.id
+            option.innerText = move.name
+
+            move3Select.append(option)
+        })
+
+        let submit = ce('input')
+        submit.type = "submit"
+        submit.value = "Create!"
+
+        robotForm.append(author, robotNameLabel, robotNameInput, robotHeadLabel, robotHeadSelect, robotTorsoLabel, robotTorsoSelect, robotLowerBodiesLabel, robotLowerBodiesSelect, move1Label, move1Select, move2Label, move2Select, move3Label, move3Select, submit)
+        document.body.append(robotForm)
+
+        robotForm.addEventListener('submit', () => {
+            event.preventDefault()
+
+            let configObj = {}
+
+            if(mode == 'create'){
+                configObj = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "author": event.target[0].value,
+                        "name": event.target[1].value,
+                        "parts": [event.target[2].value, event.target[3].value, event.target[4].value],
+                        "moves": [event.target[5].value, event.target[6].value, event.target[7].value]
+                    })
+                }
+            }
+            else if(mode == 'edit'){
+                configObj = {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "id": bot.id,
+                        "author": event.target[0].value,
+                        "name": event.target[1].value,
+                        "parts": [event.target[2].value, event.target[3].value, event.target[4].value],
+                        "moves": [event.target[5].value, event.target[6].value, event.target[7].value]
+                    })
+                }
+            }
+
+            if(mode == 'create'){
+                fetch('http://localhost:3000/robots', configObj)
+                .then(res => res.json())
+                .then(() => fetchMyRobots('display'))
+            }
+            else if(mode == 'edit'){
+                fetch(`http://localhost:3000/robots/${bot.id}`, configObj)
+                .then(res => res.json())
+                .then(() => fetchMyRobots('display'))
+            }
+            
+
+            // .then(robot =>{
+            //     let configObj = {
+            //         method: "POST",
+            //         headers: {
+            //             "Content-Type": "application/json"
+            //         },
+            //         body: JSON.stringify({
+            //             "head": event.target[2].value,
+            //             "torso": event.target[3].value,
+            //             "lower_body": event.target[4].value
+            //         })
+            //     }
+            //     fetch('http://localhost:3000/robot_parts')
+            // })
+        })
     }
     
     function fetchMyRobots(mode) {
@@ -54,7 +473,7 @@ document.addEventListener('DOMContentLoaded', () =>{
 
         fetch('http://localhost:3000/users')
         .then(res => res.json())
-        .then(users => users.filter(user => user.id == 1)) //change to current user's id
+        .then(users => users.filter(user => user.user_name == currentUser.user_name))
         .then(user => user.map(user => user.robots))
         .then(robots => showMyRobots(robots, mode))
     }
@@ -119,7 +538,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         name.innerText = robot.name
     
         let author = ce('h4')
-        author.innerText = `Created by: ${robot.author}`
+        author.innerText = `Created by: ${robot.user.user_name}`
     
         let head = ce('img')
         head.src = robot.parts[0].image_url
@@ -188,8 +607,40 @@ document.addEventListener('DOMContentLoaded', () =>{
             })
             card.append(battleBtn)
         }
+
+        if (mode == 'display'){
+            let editBtn = ce('button')
+            editBtn.innerText = 'Edit Robot'
+
+            editBtn.addEventListener('click', () => {
+                createScreen(mode = 'edit', bot = robot)
+            })
+
+            let deleteBtn = ce('button')
+            deleteBtn.innerText = 'Delete Robot'
+
+            deleteBtn.addEventListener('click', () => {
+                deleteRobot(robot)
+            })
+
+            card.append(editBtn, deleteBtn)
+        }
     
         grid.append(card)
+    }
+
+    function deleteRobot(robot){
+        let configObj = {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "robot_id": robot.id
+            })
+        }
+        fetch(`http://localhost:3000/robots/${robot.id}`, configObj)
+        .then(mainMenu())
     }
 
     function setBattle(attacker){
@@ -444,8 +895,8 @@ document.addEventListener('DOMContentLoaded', () =>{
                         self.health = 0
                     }
                         
-                    if(opponent.health < 0){
-                        opponent.health = 0
+                    if(other.health < 0){
+                        other.health = 0
                     }
                 }
             })
