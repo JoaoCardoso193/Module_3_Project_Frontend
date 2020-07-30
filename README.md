@@ -14,7 +14,7 @@ In the backend directory, and run `rails s` to start the server.
 
 ### Creator
 
-[João Cardoso])https://github.com/JoaoCardoso193
+[João Cardoso](https://github.com/JoaoCardoso193
 
 ### License
 
