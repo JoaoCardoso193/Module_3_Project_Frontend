@@ -545,8 +545,17 @@ document.addEventListener('DOMContentLoaded', () =>{
     function showRobot(robot, mode, grid){
 
         let card = ce('div')
-        card.className = "robot-card"
-    
+
+        if(mode == 'edit'){
+            card.className = "robot-card-edit"
+        }
+        else if(mode == 'display'){
+            card.className = "robot-card"
+        }
+        else{
+            card.className = "robot-card-all"
+        }
+
         let name = ce('h2')
         name.innerText = robot.name
     
@@ -918,14 +927,14 @@ document.addEventListener('DOMContentLoaded', () =>{
 
         let quitBtn = document.createElement('button')
         quitBtn.className = 'quit-button'
-        quitBtn.innerText = "   Quit   \n ____"
+        quitBtn.innerText = "         Quit          \n _________________"
         controlPanel.append(quitBtn)
 
         quitBtn.addEventListener('click', () => {
             mainMenu()
         })
 
-        attackerBox.append(controlPanel)
+        // attackerBox.append(controlPanel)
 
         //Appending to DOM
         battleGrid.append(attackerBox)
@@ -933,6 +942,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         battleGrid.append(opponentBox)
 
         document.body.append(battleGrid)
+        document.body.append(controlPanel)
         
         function displayStats() {
             document.getElementById('attacker-health').innerText = `Your Health: ${Math.round(attacker.health)}`

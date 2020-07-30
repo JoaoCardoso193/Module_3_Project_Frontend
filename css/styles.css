@@ -1,7 +1,32 @@
 body{
     background-color: white;
 }
+
 .robot-card {
+    background-color: rgb(33, 143, 216);
+    text-align: center;
+    border: grey solid 1px;
+    padding: 2rem;
+    width: 26rem;
+    height: 57rem;
+    display: inline-grid;
+    margin: 1rem 2rem;
+    box-shadow: 3px 4px #1c4dec
+}
+
+.robot-card-all {
+    background-color: rgb(33, 143, 216);
+    text-align: center;
+    border: grey solid 1px;
+    padding: 2rem;
+    width: 26rem;
+    height: 55rem;
+    display: inline-grid;
+    margin: 1rem 2rem;
+    box-shadow: 3px 4px #1c4dec
+}
+
+.robot-card-edit {
     background-color: rgb(33, 143, 216);
     text-align: center;
     border: grey solid 1px;
@@ -15,6 +40,14 @@ body{
 
 .robot-card:hover{
 background-color: rgb(5, 155, 255)
+}
+
+.robot-card-all:hover{
+    background-color: rgb(5, 155, 255)
+}
+
+.robot-card-edit:hover{
+    background-color: rgb(5, 155, 255)
 }
 
 .robot-image {
@@ -96,7 +129,7 @@ background-color: rgb(5, 155, 255)
 .battle-box{
     background-color: rgba(88, 218, 189, 0.329);
     vertical-align: top;
-    height: 30rem;
+    height: 42rem;
     width: 32rem;
     overflow-y: auto;
 }
