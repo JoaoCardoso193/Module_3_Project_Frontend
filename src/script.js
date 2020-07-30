@@ -928,11 +928,13 @@ document.addEventListener('DOMContentLoaded', () =>{
                                 attackBtns.forEach(button => button.disabled = false)
                             }
                             else{
+                                displayStats()
                                 gameOver(attacker, opponent)
                             }
                         })
                     }
                     else{
+                        displayStats()
                         gameOver(attacker, opponent)
                     }
                 }
