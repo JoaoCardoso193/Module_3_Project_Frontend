@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () =>{
             health.innerText = `Health: ${head.health}`
 
             let batteryLife = ce('p')
-            batteryLife.innerText = `Battery Life: ${head.batteryLife}`
+            batteryLife.innerText = `Battery Life: ${head.battery_life}`
 
             let speed = ce('p')
             speed.innerText = `Speed: ${head.speed}`
@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () =>{
             health.innerText = `Health: ${torso.health}`
 
             let batteryLife = ce('p')
-            batteryLife.innerText = `Battery Life: ${torso.batteryLife}`
+            batteryLife.innerText = `Battery Life: ${torso.battery_life}`
 
             let speed = ce('p')
             speed.innerText = `Speed: ${torso.speed}`
@@ -394,7 +394,7 @@ document.addEventListener('DOMContentLoaded', () =>{
             health.innerText = `Health: ${lowerBody.health}`
 
             let batteryLife = ce('p')
-            batteryLife.innerText = `Battery Life: ${lowerBody.batteryLife}`
+            batteryLife.innerText = `Battery Life: ${lowerBody.battery_life}`
 
             let speed = ce('p')
             speed.innerText = `Speed: ${lowerBody.speed}`
@@ -690,15 +690,18 @@ document.addEventListener('DOMContentLoaded', () =>{
         author.innerText = `Created by: ${robot.user.user_name}`
     
         let head = ce('img')
-        head.src = robot.parts[0].image_url
+        headPart = robot.parts.find(part => part.category == 'head')
+        head.src = headPart.image_url
         head.className = "robot-image"
     
         let torso = ce('img')
-        torso.src = robot.parts[1].image_url
+        torsoPart = robot.parts.find(part => part.category == 'torso')
+        torso.src = torsoPart.image_url
         torso.className = "robot-image"
     
         let lowerBody = ce('img')
-        lowerBody.src = robot.parts[2].image_url
+        lowerBodyPart = robot.parts.find(part => part.category == 'lower_body')
+        lowerBody.src = lowerBodyPart.image_url
         lowerBody.className = "robot-image"
     
         let statsDiv = ce('div')

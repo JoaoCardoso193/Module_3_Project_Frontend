@@ -1,5 +1,5 @@
 body{
-    background-color: white;
+    background-color: lightblue;
 }
 
 .robot-card {
@@ -60,7 +60,7 @@ background-color: rgb(5, 155, 255)
 
 .stats-card{
     text-align: left;
-    border: grey solid 1px;
+    border: #1c4dec solid 2px;
     /* padding: 1rem; */
     width: 9rem;
     height: 15rem;
@@ -81,6 +81,10 @@ background-color: rgb(5, 155, 255)
     box-shadow: 3px 4px #1c4dec
 }
 
+.part-card:hover{
+    background-color: rgb(5, 155, 255)
+    }
+
 .move-card{
     background-color: rgb(33, 143, 216);
     text-align: left;
@@ -93,9 +97,13 @@ background-color: rgb(5, 155, 255)
     box-shadow: 3px 4px #1c4dec
 }
 
+.move-card:hover{
+    background-color: rgb(5, 155, 255)
+}
+
 .moves-card{
     text-align: right;
-    border: grey solid 1px;
+    border: #1c4dec solid 2px;
     /* padding: 1rem; */
     width: 9rem;
     height: 15rem;
@@ -151,7 +159,7 @@ background-color: rgb(5, 155, 255)
 }
 
 .battle-box{
-    background-color: rgba(88, 218, 189, 0.329);
+    background-color: rgba(88, 218, 190, 0.856);
     vertical-align: top;
     height: 42rem;
     width: 32rem;
