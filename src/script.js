@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', () =>{
     }
 
     function playMainSong(){
+        mainSong.loop = true
+        mainSong.currentTime = 0
         document.body.append(mainSong)
         mainSong.play()
     }
