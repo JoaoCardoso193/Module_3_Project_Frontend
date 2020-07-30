@@ -1,6 +1,6 @@
 # Batttle Bots
 
-Battle Bots is a battling turn-based game, where players can create their own robots by selecting from a variety of modular parts and moves.
+Battle Bots is a turn-based battling game, where players can create their own robots by selecting from a variety of modular parts and moves and then use them to battle other user-created robots controlled by a CPU.
 
 ## Getting Started
 
