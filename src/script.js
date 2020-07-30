@@ -184,6 +184,8 @@ document.addEventListener('DOMContentLoaded', () =>{
     }
 
     function editUserName(){
+        document.body.innerHTML = ""
+
         let editForm = ce('form')
 
         let newUserNameLabel = ce('label')
@@ -197,9 +199,16 @@ document.addEventListener('DOMContentLoaded', () =>{
         submit.type = 'submit'
         submit.value = 'Submit'
 
+        let cancelBtn = ce('button')
+        cancelBtn.innerText = "Cancel"
+
+        cancelBtn.addEventListener('click', () => {
+            userSettings()
+        })
+
         editForm.append(newUserNameLabel, newUserNameInput, submit)
 
-        document.body.append(editForm)
+        document.body.append(cancelBtn, editForm)
 
         editForm.addEventListener('submit', () => {
             event.preventDefault()
@@ -289,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () =>{
             logOut()
         })
 
-        document.body.append(welcomeUser, playBtn, myRobotsBtn, allRobotsBtn, createBtn, userSettingsBtn, logoutBtn)
+        document.body.append(welcomeUser, playBtn, createBtn, myRobotsBtn, allRobotsBtn, userSettingsBtn, logoutBtn)
     }
 
     function createScreen(mode, bot = null){
