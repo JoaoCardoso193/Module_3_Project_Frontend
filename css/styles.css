@@ -1,13 +1,38 @@
 body{
-    background-color: white;
+    background-color: lightblue;
 }
+
 .robot-card {
     background-color: rgb(33, 143, 216);
     text-align: center;
     border: grey solid 1px;
     padding: 2rem;
     width: 26rem;
-    height: 46rem;
+    height: 57rem;
+    display: inline-grid;
+    margin: 1rem 2rem;
+    box-shadow: 3px 4px #1c4dec
+}
+
+.robot-card-all {
+    background-color: rgb(33, 143, 216);
+    text-align: center;
+    border: grey solid 1px;
+    padding: 2rem;
+    width: 26rem;
+    height: 55rem;
+    display: inline-grid;
+    margin: 1rem 2rem;
+    box-shadow: 3px 4px #1c4dec
+}
+
+.robot-card-edit {
+    background-color: rgb(33, 143, 216);
+    text-align: center;
+    border: grey solid 1px;
+    padding: 2rem;
+    width: 26rem;
+    height: 57rem;
     display: inline-grid;
     margin: 1rem 2rem;
     box-shadow: 3px 4px #1c4dec
@@ -17,17 +42,25 @@ body{
 background-color: rgb(5, 155, 255)
 }
 
+.robot-card-all:hover{
+    background-color: rgb(5, 155, 255)
+}
+
+.robot-card-edit:hover{
+    background-color: rgb(5, 155, 255)
+}
+
 .robot-image {
     justify-self: center;
-    height: auto;
-    width: auto;
+    height: 10rem;
+    width: 20rem;
     margin: 0rem 0rem;
     display: block
   }
 
 .stats-card{
     text-align: left;
-    border: grey solid 1px;
+    border: #1c4dec solid 2px;
     /* padding: 1rem; */
     width: 9rem;
     height: 15rem;
@@ -36,9 +69,41 @@ background-color: rgb(5, 155, 255)
     /* box-shadow: 3px 4px #1c4dec */
 }
 
+.part-card{
+    background-color: rgb(33, 143, 216);
+    text-align: left;
+    border: grey solid 1px;
+    padding: 2rem;
+    width: auto;
+    height: auto;
+    display: inline-grid;
+    margin: 1rem 2rem;
+    box-shadow: 3px 4px #1c4dec
+}
+
+.part-card:hover{
+    background-color: rgb(5, 155, 255)
+    }
+
+.move-card{
+    background-color: rgb(33, 143, 216);
+    text-align: left;
+    border: grey solid 1px;
+    padding: 2rem;
+    width: auto;
+    height: auto;
+    display: inline-grid;
+    margin: 1rem 2rem;
+    box-shadow: 3px 4px #1c4dec
+}
+
+.move-card:hover{
+    background-color: rgb(5, 155, 255)
+}
+
 .moves-card{
     text-align: right;
-    border: grey solid 1px;
+    border: #1c4dec solid 2px;
     /* padding: 1rem; */
     width: 9rem;
     height: 15rem;
@@ -94,9 +159,9 @@ background-color: rgb(5, 155, 255)
 }
 
 .battle-box{
-    background-color: rgba(88, 218, 189, 0.329);
+    background-color: rgba(88, 218, 190, 0.856);
     vertical-align: top;
-    height: 30rem;
+    height: 42rem;
     width: 32rem;
     overflow-y: auto;
 }
