@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     console.log('DOMContentLoaded')
 
 
-    //Important definitions
+    //Global variables
     var currentUser = null
     var mainSong = new Audio('audio/9_Boss_1_Master.mp3')
     var clickSound = new Audio('audio/click.wav')
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     //Actions
     welcome()
 
-    //Functions
+    //Important functions and variables
     function ce(element) {
         return document.createElement(element)
     }
