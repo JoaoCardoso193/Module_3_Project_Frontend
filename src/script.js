@@ -4,12 +4,12 @@ document.addEventListener('DOMContentLoaded', () =>{
 
     //Important definitions
     var currentUser = null
-
+    var mainSong = new Audio('audio/9_Boss_1_Master.mp3')
+    var clickSound = new Audio('audio/click.wav')
 
 
     //Actions
     welcome()
-
 
     //Functions
     function ce(element) {
@@ -22,6 +22,16 @@ document.addEventListener('DOMContentLoaded', () =>{
 
     const sleep = (milliseconds) => {
         return new Promise(resolve => setTimeout(resolve, milliseconds))
+    }
+
+    function playMainSong(){
+        document.body.append(mainSong)
+        mainSong.play()
+    }
+
+    function playClick(){
+        document.body.append(clickSound)
+        clickSound.play()
     }
 
     function welcome(){
@@ -804,6 +814,7 @@ document.addEventListener('DOMContentLoaded', () =>{
 
     function battle(robots, attacker){
         document.body.innerHTML = ""
+        playMainSong()
         robots = robots.filter(robot => robot.id != attacker.id) //making sure no robot fights itself
         let opponent = randomElement(robots) //selecting a random opponent
 
@@ -967,6 +978,8 @@ document.addEventListener('DOMContentLoaded', () =>{
 
 
                 function performMove(robot){
+                    playClick()
+
                     let struggle = {
                         "id":99,
                         "name":"Struggle",
