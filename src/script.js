@@ -299,6 +299,136 @@ document.addEventListener('DOMContentLoaded', () =>{
     function createForm(parts, moves, mode, bot){
         document.body.innerHTML = ""
 
+        let mainGrid = ce('div')
+        mainGrid.className = 'main-grid'
+
+        let heads = parts.filter(part => part.category == 'head')
+        let torsos = parts.filter(part => part.category == 'torso')
+        let lowerBodies = parts.filter(part => part.category == 'lower_body')
+        
+
+        heads.forEach(head => {
+
+            let headShowcase = ce('div')
+            headShowcase.className = 'part-card'
+
+            let image = ce('img')
+            image.src = head.image_url
+            image.className = 'robot-image'
+
+            let name = ce('h2')
+            name.innerText = head.name
+
+            let description = ce('h3')
+            description.innerText = head.description
+
+            let health = ce('p')
+            health.innerText = `Health: ${head.health}`
+
+            let batteryLife = ce('p')
+            batteryLife.innerText = `Battery Life: ${head.batteryLife}`
+
+            let speed = ce('p')
+            speed.innerText = `Speed: ${head.speed}`
+
+            let attack = ce('p')
+            attack.innerText = `Attack: ${head.attack}`
+
+            let defense = ce('p')
+            defense.innerText = `Defense: ${head.defense}`
+
+            headShowcase.append(image, name, description, health, batteryLife, speed, attack, defense)
+            mainGrid.append(headShowcase)
+        })
+
+        torsos.forEach(torso => {
+
+            let torsoShowcase = ce('div')
+            torsoShowcase.className = 'part-card'
+
+            let image = ce('img')
+            image.src = torso.image_url
+            image.className = 'robot-image'
+
+            let name = ce('h2')
+            name.innerText = torso.name
+
+            let description = ce('h3')
+            description.innerText = torso.description
+
+            let health = ce('p')
+            health.innerText = `Health: ${torso.health}`
+
+            let batteryLife = ce('p')
+            batteryLife.innerText = `Battery Life: ${torso.batteryLife}`
+
+            let speed = ce('p')
+            speed.innerText = `Speed: ${torso.speed}`
+
+            let attack = ce('p')
+            attack.innerText = `Attack: ${torso.attack}`
+
+            let defense = ce('p')
+            defense.innerText = `Defense: ${torso.defense}`
+
+            torsoShowcase.append(image, name, description, health, batteryLife, speed, attack, defense)
+            mainGrid.append(torsoShowcase)
+        })
+
+        lowerBodies.forEach(lowerBody => {
+
+            let lowerBodyShowcase = ce('div')
+            lowerBodyShowcase.className = 'part-card'
+
+            let image = ce('img')
+            image.src = lowerBody.image_url
+            image.className = 'robot-image'
+
+            let name = ce('h2')
+            name.innerText = lowerBody.name
+
+            let description = ce('h3')
+            description.innerText = lowerBody.description
+
+            let health = ce('p')
+            health.innerText = `Health: ${lowerBody.health}`
+
+            let batteryLife = ce('p')
+            batteryLife.innerText = `Battery Life: ${lowerBody.batteryLife}`
+
+            let speed = ce('p')
+            speed.innerText = `Speed: ${lowerBody.speed}`
+
+            let attack = ce('p')
+            attack.innerText = `Attack: ${lowerBody.attack}`
+
+            let defense = ce('p')
+            defense.innerText = `Defense: ${lowerBody.defense}`
+
+            lowerBodyShowcase.append(image, name, description, health, batteryLife, speed, attack, defense)
+            mainGrid.append(lowerBodyShowcase)
+        })
+
+        moves.forEach(move => {
+            let moveShowcase = ce('div')
+            moveShowcase.className = 'move-card'
+
+            let name = ce('h2')
+            name.innerText = move.name
+
+            let category = ce('h3')
+            category.innerText = `Category: ${move.category}`
+
+            let description = ce('p')
+            description.innerText = move.description
+
+            let cost = ce('p')
+            cost.innerText = `Battery Life Cost: ${move.cost}`
+
+            moveShowcase.append(name, category, description, cost)
+            mainGrid.append(moveShowcase)
+        })
+
         let homeBtn = ce('button')
         homeBtn.innerText = "Home"
 
@@ -317,13 +447,12 @@ document.addEventListener('DOMContentLoaded', () =>{
         robotNameInput.type = 'text'
 
         let robotHeadLabel = ce('label')
-        robotHeadLabel.innerText = "Robot Head: "
+        robotHeadLabel.innerText = " Robot Head: "
         
         let robotHeadSelect = ce('select')
         robotHeadSelect.name = "heads"
         robotHeadSelect.id = 'heads'
 
-        heads = parts.filter(part => part.category == 'head')
 
         heads.forEach(head => {
             let option = ce('option')
@@ -334,13 +463,12 @@ document.addEventListener('DOMContentLoaded', () =>{
         })
 
         let robotTorsoLabel = ce('label')
-        robotTorsoLabel.innerText = "Robot Torso: "
+        robotTorsoLabel.innerText = " Robot Torso: "
 
         let robotTorsoSelect = ce('select')
         robotTorsoSelect.name = "torsos"
         robotTorsoSelect.id = 'torsos'
 
-        torsos = parts.filter(part => part.category == 'torso')
 
         torsos.forEach(torso => {
             let option = ce('option')
@@ -351,13 +479,12 @@ document.addEventListener('DOMContentLoaded', () =>{
         })
 
         let robotLowerBodiesLabel = ce('label')
-        robotLowerBodiesLabel.innerText = "Robot Lower Body: "
+        robotLowerBodiesLabel.innerText = " Robot Lower Body: "
 
         let robotLowerBodiesSelect = ce('select')
         robotLowerBodiesSelect.name = "torsos"
         robotLowerBodiesSelect.id = 'torsos'
 
-        lowerBodies = parts.filter(part => part.category == 'lower_body')
 
         lowerBodies.forEach(lowerBody => {
             let option = ce('option')
@@ -368,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         })
 
         let move1Label = ce('label')
-        move1Label.innerText = "Move 1: "
+        move1Label.innerText = " Move 1: "
 
         let move1Select = ce('select')
 
@@ -381,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         })
 
         let move2Label = ce('label')
-        move2Label.innerText = "Move 2: "
+        move2Label.innerText = " Move 2: "
 
         let move2Select = ce('select')
 
@@ -394,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         })
 
         let move3Label = ce('label')
-        move3Label.innerText = "Move 3: "
+        move3Label.innerText = " Move 3: "
 
         let move3Select = ce('select')
 
@@ -411,7 +538,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         submit.value = "Create!"
 
         robotForm.append(author, robotNameLabel, robotNameInput, robotHeadLabel, robotHeadSelect, robotTorsoLabel, robotTorsoSelect, robotLowerBodiesLabel, robotLowerBodiesSelect, move1Label, move1Select, move2Label, move2Select, move3Label, move3Select, submit)
-        document.body.append(homeBtn, robotForm)
+        document.body.append(homeBtn, robotForm, mainGrid)
 
         homeBtn.addEventListener('click', () => {
             mainMenu()

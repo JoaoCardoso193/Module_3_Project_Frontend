@@ -69,6 +69,30 @@ background-color: rgb(5, 155, 255)
     /* box-shadow: 3px 4px #1c4dec */
 }
 
+.part-card{
+    background-color: rgb(33, 143, 216);
+    text-align: left;
+    border: grey solid 1px;
+    padding: 2rem;
+    width: auto;
+    height: auto;
+    display: inline-grid;
+    margin: 1rem 2rem;
+    box-shadow: 3px 4px #1c4dec
+}
+
+.move-card{
+    background-color: rgb(33, 143, 216);
+    text-align: left;
+    border: grey solid 1px;
+    padding: 2rem;
+    width: auto;
+    height: auto;
+    display: inline-grid;
+    margin: 1rem 2rem;
+    box-shadow: 3px 4px #1c4dec
+}
+
 .moves-card{
     text-align: right;
     border: grey solid 1px;
