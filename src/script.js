@@ -690,17 +690,17 @@ document.addEventListener('DOMContentLoaded', () =>{
         author.innerText = `Created by: ${robot.user.user_name}`
     
         let head = ce('img')
-        headPart = robot.parts.find(part => part.category == 'head')
+        let headPart = robot.parts.find(part => part.category == 'head')
         head.src = headPart.image_url
         head.className = "robot-image"
     
         let torso = ce('img')
-        torsoPart = robot.parts.find(part => part.category == 'torso')
+        let torsoPart = robot.parts.find(part => part.category == 'torso')
         torso.src = torsoPart.image_url
         torso.className = "robot-image"
     
         let lowerBody = ce('img')
-        lowerBodyPart = robot.parts.find(part => part.category == 'lower_body')
+        let lowerBodyPart = robot.parts.find(part => part.category == 'lower_body')
         lowerBody.src = lowerBodyPart.image_url
         lowerBody.className = "robot-image"
     
@@ -828,15 +828,18 @@ document.addEventListener('DOMContentLoaded', () =>{
 
         let attackerHead = ce('img')
         attackerHead.className = 'robot-image'
-        attackerHead.src = attacker.parts[0].image_url
+        let attackerHeadPart = attacker.parts.find(part => part.category == 'head')
+        attackerHead.src = attackerHeadPart.image_url
 
         let attackerTorso = ce('img')
         attackerTorso.className = 'robot-image'
-        attackerTorso.src = attacker.parts[1].image_url
+        let attackerTorsoPart = attacker.parts.find(part => part.category == 'torso')
+        attackerTorso.src = attackerTorsoPart.image_url
 
         let attackerLowerBody = ce('img')
         attackerLowerBody.className = 'robot-image'
-        attackerLowerBody.src = attacker.parts[2].image_url
+        let attackerLowerBodyPart = attacker.parts.find(part => part.category == 'lower_body')
+        attackerLowerBody.src = attackerLowerBodyPart.image_url
 
         attackerBox.append(attackerName, attackerHealth, attackerBatteryLife, attackerHead, attackerTorso, attackerLowerBody)
 
@@ -864,15 +867,18 @@ document.addEventListener('DOMContentLoaded', () =>{
 
         let opponentHead = ce('img')
         opponentHead.className = 'robot-image'
-        opponentHead.src = opponent.parts[0].image_url
+        let opponentHeadPart = opponent.parts.find(part => part.category == 'head')
+        opponentHead.src = opponentHeadPart.image_url
 
         let opponentTorso = ce('img')
         opponentTorso.className = 'robot-image'
-        opponentTorso.src = opponent.parts[1].image_url
+        let opponentTorsoPart = opponent.parts.find(part => part.category == 'torso')
+        opponentTorso.src = opponentTorsoPart.image_url
 
         let opponentLowerBody = ce('img')
         opponentLowerBody.className = 'robot-image'
-        opponentLowerBody.src = opponent.parts[2].image_url
+        let opponentLowerBodyPart = opponent.parts.find(part => part.category == 'lower_body')
+        opponentLowerBody.src = opponentLowerBodyPart.image_url
 
         opponentBox.append(opponentName, opponentHealth, opponentBatteryLife, opponentHead, opponentTorso, opponentLowerBody)
 
